@@ -1,0 +1,20 @@
+FSP — CHANGELOG  
+
+v1.0 — Original FSP  
+- Block-based compression.  
+- Pattern search from 2 characters to infinity.  
+- Base + DIFF per line.  
+- Compressed text could grow larger than original for small patterns (2 chars).  
+- Simple line-oriented approach.  
+
+v2.0 — Updated FSP with optimized pattern search  
+- Pattern search limited to 3–5 characters to reduce overhead.  
+- Automatic minimum pattern length selection (3–5 chars) for maximum repeats.  
+- Maximum pattern length extended to 5–6 chars for longer repeated sequences.  
+- Base stream stores concatenated unique patterns.  
+- References (REF) + literals (LITERAL) replace repeated patterns in text.  
+- Patterns that repeat only once are stored as LITERAL to minimize REF overhead.  
+- Works on the entire text, not line-by-line.  
+- Significantly improved compression ratio; often compresses below original size.  
+- Maintains full reversibility: text can be restored exactly.  
+- Ideal for repetitive text, logs, versioned files, or sequences with repeated patterns.

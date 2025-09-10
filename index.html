@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FSP Algorithm - Find Similar Patterns</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+            color: #333;
+            line-height: 1.6;
+        }
+        .container {
+            width: 800px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border: 1px solid #ccc;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        header {
+            text-align: center;
+            padding: 20px 0;
+            background: linear-gradient(to bottom, #4b6cb7, #182848);
+            color: white;
+            margin: -20px -20px 20px -20px;
+        }
+        h1 {
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px #000;
+            margin: 0;
+            padding: 10px;
+        }
+        h2 {
+            color: #4b6cb7;
+            border-bottom: 2px solid #4b6cb7;
+            padding-bottom: 5px;
+            margin-top: 30px;
+        }
+        h3 {
+            color: #182848;
+        }
+        .nav {
+            background-color: #182848;
+            padding: 10px;
+            margin: 0 -20px 20px -20px;
+        }
+        .nav a {
+            color: white;
+            text-decoration: none;
+            padding: 5px 15px;
+            margin: 0 5px;
+        }
+        .nav a:hover {
+            background-color: #4b6cb7;
+            border-radius: 3px;
+        }
+        code {
+            background-color: #f4f4f4;
+            border: 1px solid #ddd;
+            padding: 2px 5px;
+            font-family: 'Courier New', monospace;
+        }
+        pre {
+            background-color: #f8f8f8;
+            border: 1px solid #ddd;
+            padding: 15px;
+            overflow: auto;
+            margin: 15px 0;
+        }
+        .example {
+            background-color: #e8f4f8;
+            border-left: 5px solid #4b6cb7;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .important {
+            background-color: #fff9e6;
+            border-left: 5px solid #ffcc00;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding: 15px;
+            background-color: #182848;
+            color: white;
+            margin: 20px -20px -20px -20px;
+        }
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        .comparison-table th, .comparison-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        .comparison-table th {
+            background-color: #f2f2f2;
+        }
+        .code-comment {
+            color: #008000;
+            font-style: italic;
+        }
+        .highlight {
+            background-color: #ffffcc;
+            padding: 2px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>FSP Algorithm</h1>
+            <p>Find Similar Patterns - A New Era of Data Compression</p>
+        </header>
+
+        <div class="nav">
+            <a href="#about">About the Algorithm</a>
+            <a href="#how-it-works">How It Works</a>
+            <a href="#implementation">Implementation</a>
+            <a href="#advantages">Advantages</a>
+            <a href="#examples">Examples</a>
+            <a href="#comparison">Comparison</a>
+            <a href="#usage">Application</a>
+        </div>
+
+        <section id="about">
+            <h2>What is the FSP Algorithm?</h2>
+            <p>FSP (Find Similar Patterns) is a revolutionary data compression algorithm designed to effectively reduce data size by finding similar patterns. Unlike traditional compression methods (like ZIP, RAR, etc.), FSP specializes in working with small and medium-sized data volumes, where classic algorithms are often inefficient.</p>
+            
+            <div class="important">
+                <h3>Why is FSP Unique?</h3>
+                <p>Most compression algorithms add overhead, which makes them inefficient for small files. FSP uses a fundamentally different approach, avoiding this problem.</p>
+            </div>
+        </section>
+
+        <section id="how-it-works">
+            <h2>How the FSP Algorithm Works</h2>
+            <p>The algorithm is based on the principle of delta encoding and finding differences between similar data blocks.</p>
+            
+            <h3>Compression Stages:</h3>
+            <ol>
+                <li><strong>Choosing the base block</strong> - the first data block is saved in full as a reference</li>
+                <li><strong>Finding differences</strong> - differences from the base block are found for each subsequent block</li>
+                <li><strong>Storage optimization</strong> - if the differences are fewer than the block size, only they are saved</li>
+                <li><strong>Storing unique blocks</strong> - if a block is very different, it is saved in full</li>
+            </ol>
+            
+            <h3>Mathematical principles:</h3>
+            <p>The algorithm uses sequence comparison at the byte or character level. For two sequences A and B, the difference is defined as a set of tuples (position, new_value).</p>
+            
+            <div class="example">
+                <h4>Formal definition:</h4>
+                <p>For a base string B and a target string T, the delta D is defined as:</p>
+                <p>D = {(i, T[i]) | for all i, where B[i] ≠ T[i]}</p>
+                <p>If len(T) > len(B), additional characters are added to the delta.</p>
+            </div>
+        </section>
+
+        <section id="implementation">
+            <h2>Detailed Algorithm Implementation</h2>
+            
+            <h3>Full implementation in Python</h3>
+            <pre><code>def fsp_diff(a: str, b: str):
+    """
+    Finds differences between two strings (can be of different lengths)
+    
+    Args:
+        a (str): The first string (base)
+        b (str): The second string (to be compared)
+    
+    Returns:
+        list: A list of tuples (position, new_character)
+    """
+    diffs = []
+    max_len = max(len(a), len(b))
+    
+    for i in range(max_len):
+        char_a = a[i] if i < len(a) else None
+        char_b = b[i] if i < len(b) else None
+        
+        if char_a != char_b:
+            diffs.append((i, char_b))
+    
+    return diffs
+
+
+def fsp_compress(lines):
+    """
+    Compresses a list of strings using the FSP algorithm
+    
+    Args:
+        lines (list): A list of strings to compress
+    
+    Returns:
+        list: Compressed data in the format of a list of tuples (tag, data)
+    """
+    compressed = []
+    
+    if not lines:
+        return compressed
+    
+    # Save the first string as the base
+    base = lines[0]
+    compressed.append(("BASE", base))
+    
+    # Process the remaining strings
+    for line in lines[1:]:
+        # Find differences from the base string
+        differences = fsp_diff(base, line)
+        
+        # Determine what's more efficient: save the diff or the entire string
+        if len(differences) < len(line):
+            compressed.append(("DIFF", differences))
+        else:
+            compressed.append(("RAW", line))
+    
+    return compressed
+
+
+def fsp_decompress(compressed):
+    """
+    Decompresses FSP-compressed data
+    
+    Args:
+        compressed (list): Compressed data in the format of a list of tuples (tag, data)
+    
+    Returns:
+        list: The restored list of strings
+    """
+    lines = []
+    base = None
+    
+    for tag, data in compressed:
+        if tag == "BASE":
+            base = data
+            lines.append(base)
+        elif tag == "DIFF":
+            if base is None:
+                raise ValueError("BASE block must come before DIFF blocks")
+            
+            # Create a copy of the base string for modification
+            current_chars = list(base)
+            
+            # Apply all differences
+            for position, new_char in data:
+                if position < len(current_chars):
+                    if new_char is None:
+                        # Remove the character
+                        current_chars.pop(position)
+                    else:
+                        # Replace the character
+                        current_chars[position] = new_char
+                else:
+                    if new_char is not None:
+                        # Add a new character
+                        current_chars.append(new_char)
+            
+            # Convert back to a string and add to the result
+            reconstructed_line = ''.join(current_chars)
+            lines.append(reconstructed_line)
+        elif tag == "RAW":
+            lines.append(data)
+    
+    return lines
+
+
+# Example usage
+if __name__ == "__main__":
+    # Input data for compression
+    test_data = [
+        "Hello friend!",
+        "Hello fiend!",
+        "Hello friends!",
+        "Hello friend!"
+    ]
+    
+    print("Original data:")
+    for i, line in enumerate(test_data):
+        print(f"{i}: {line} (length: {len(line)} bytes)")
+    
+    # Compression
+    compressed_data = fsp_compress(test_data)
+    
+    print("\nCompressed data:")
+    for tag, data in compressed_data:
+        if tag == "DIFF":
+            print(f"{tag}: {len(data)} differences")
+        else:
+            print(f"{tag}: {data}")
+    
+    # Decompression
+    decompressed_data = fsp_decompress(compressed_data)
+    
+    print("\nDecompressed data:")
+    for i, line in enumerate(decompressed_data):
+        print(f"{i}: {line}")
+    
+    # Check for correctness
+    assert test_data == decompressed_data, "Error: Decompressed data does not match the original!"
+    print("\n✓ Check passed: Data correctly restored!")
+    
+    # Calculate compression efficiency
+    original_size = sum(len(line.encode('utf-8')) for line in test_data)
+    compressed_size = 0
+    
+    for tag, data in compressed_data:
+        if tag in ("BASE", "RAW"):
+            compressed_size += len(data.encode('utf-8'))
+        elif tag == "DIFF":
+            # Assuming each difference takes ~2 bytes
+            compressed_size += len(data) * 2
+    
+    ratio = original_size / compressed_size
+    print(f"\nCompression efficiency:")
+    print(f"Original size: {original_size} bytes")
+    print(f"Compressed size: ~{compressed_size} bytes")
+    print(f"Compression ratio: {ratio:.2f}")</code></pre>
+        </section>
+
+        <section id="advantages">
+            <h2>Advantages of the FSP Algorithm</h2>
+            
+            <h3>Compared to traditional methods:</h3>
+            <ul>
+                <li><strong>Efficiency for small data</strong> - doesn't add significant overhead</li>
+                <li><strong>Simplicity of implementation</strong> - doesn't require complex data structures or mathematical operations</li>
+                <li><strong>High speed</strong> - linear complexity O(n) for most operations</li>
+                <li><strong>Versatility</strong> - works with any data type (text, binary data)</li>
+            </ul>
+            
+            <h3>Technical advantages:</h3>
+            <ul>
+                <li>Minimal overhead for service information</li>
+                <li>Ability for streaming data processing</li>
+                <li>Easy adaptation for working with binary data</li>
+                <li>Support for incremental compression</li>
+            </ul>
+        </section>
+
+        <section id="examples">
+            <h2>Detailed Examples of Operation</h2>
+            
+            <h3>Example 1: Text Data</h3>
+            <div class="example">
+                <p><strong>Input data:</strong></p>
+                <pre>["Hello friend!", "Hello fiend!", "Hello friends!", "Hello friend!"]</pre>
+                
+                <p><strong>Compression process:</strong></p>
+                <ol>
+                    <li>Save "Hello friend!" as BASE</li>
+                    <li>For "Hello fiend!" find differences: [(7, 'i'), (8, 'e'), (9, 'n'), (10, 'd'), (11, '!'), (12, None)]</li>
+                    <li>For "Hello friends!" find differences: [(12, 's'), (13, '!')]</li>
+                    <li>For "Hello friend!" there are no differences (empty diff)</li>
+                </ol>
+                
+                <p><strong>Compression result:</strong></p>
+                <pre>[("BASE", "Hello friend!"),
+ ("DIFF", [(7, 'i'), (8, 'e'), (9, 'n'), (10, 'd'), (11, '!'), (12, None)]),
+ ("DIFF", [(12, 's'), (13, '!')]),
+ ("DIFF", [])]</pre>
+            </div>
+            
+            <h3>Example 2: Binary Data</h3>
+            <div class="example">
+                <p>The algorithm can be adapted to work with binary data by comparing bytes instead of characters:</p>
+                <pre><code>def fsp_diff_binary(a: bytes, b: bytes):
+    diffs = []
+    max_len = max(len(a), len(b))
+    
+    for i in range(max_len):
+        byte_a = a[i] if i < len(a) else None
+        byte_b = b[i] if i < len(b) else None
+        
+        if byte_a != byte_b:
+            diffs.append((i, byte_b))
+    
+    return diffs</code></pre>
+            </div>
+        </section>
+
+        <section id="comparison">
+            <h2>Comparison with Other Algorithms</h2>
+            
+            <table class="comparison-table">
+                <tr>
+                    <th>Characteristic</th>
+                    <th>FSP</th>
+                    <th>ZIP</th>
+                    <th>RLE</th>
+                    <th>LZ77</th>
+                </tr>
+                <tr>
+                    <td>Efficiency for small data</td>
+                    <td>High</td>
+                    <td>Low</td>
+                    <td>Medium</td>
+                    <td>Low</td>
+                </tr>
+                <tr>
+                    <td>Overhead</td>
+                    <td>Minimal</td>
+                    <td>High</td>
+                    <td>Low</td>
+                    <td>Medium</td>
+                </tr>
+                <tr>
+                    <td>Implementation complexity</td>
+                    <td>Low</td>
+                    <td>High</td>
+                    <td>Very Low</td>
+                    <td>High</td>
+                </tr>
+                <tr>
+                    <td>Compression speed</td>
+                    <td>High</td>
+                    <td>Medium</td>
+                    <td>Very High</td>
+                    <td>Medium</td>
+                </tr>
+                <tr>
+                    <td>Compression ratio</td>
+                    <td>High for similar data</td>
+                    <td>High for large data</td>
+                    <td>Low</td>
+                    <td>High</td>
+                </tr>
+            </table>
+            
+            <div class="important">
+                <h3>Key differences:</h3>
+                <p>Unlike dictionary methods (LZ77, LZ78), FSP does not require storing a dictionary. Unlike entropy methods (Huffman, Arithmetic), FSP does not require complex probability calculations.</p>
+            </div>
+        </section>
+
+        <section id="usage">
+            <h2>Areas of Application</h2>
+            
+            <h3>Ideal usage scenarios:</h3>
+            <ul>
+                <li><strong>Version control systems</strong> - storing differences between file versions</li>
+                <li><strong>Databases</strong> - compressing similar records</li>
+                <li><strong>Network data transmission</strong> - minimizing the volume of transmitted data</li>
+                <li><strong>Log file archiving</strong> - efficient compression of highly similar strings</li>
+                <li><strong>Video surveillance</strong> - compressing consecutive frames</li>
+                <li><strong>Bioinformatics</strong> - working with DNA/RNA sequences</li>
+            </ul>
+            
+            <h3>Limitations:</h3>
+            <ul>
+                <li>Less effective for completely random data</li>
+                <li>Requires optimization for working with very large files</li>
+                <li>Efficiency depends on the presence of similar patterns in the data</li>
+            </ul>
+        </section>
+
+        <div class="footer">
+            <p>FSP Algorithm © 2024. All rights reserved.</p>
+            <p>Algorithm developed by a 15-year-old programmer</p>
+        </div>
+    </div>
+</body>
+</html>
+
