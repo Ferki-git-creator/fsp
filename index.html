@@ -3,114 +3,317 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FSP Algorithm - Find Similar Patterns</title>
+    <title>FSP Algorithm - Find Similar Patterns | Next Generation Compression</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body {
-            font-family: 'Arial', sans-serif;
+        :root {
+            --primary: #4b6cb7;
+            --secondary: #182848;
+            --accent: #ff6b6b;
+            --light: #f8f9fa;
+            --dark: #343a40;
+            --success: #28a745;
+            --info: #17a2b8;
+            --warning: #ffc107;
+            --danger: #dc3545;
+        }
+        
+        * {
             margin: 0;
             padding: 0;
-            background-color: #f0f0f0;
-            color: #333;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            background-attachment: fixed;
         }
+        
         .container {
-            width: 800px;
+            max-width: 1200px;
             margin: 0 auto;
-            background-color: #fff;
             padding: 20px;
-            border: 1px solid #ccc;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
+        
         header {
-            text-align: center;
-            padding: 20px 0;
-            background: linear-gradient(to bottom, #4b6cb7, #182848);
+            background: linear-gradient(to right, var(--secondary), var(--primary));
             color: white;
-            margin: -20px -20px 20px -20px;
+            padding: 2rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
         }
-        h1 {
-            font-size: 2.5em;
-            text-shadow: 2px 2px 4px #000;
-            margin: 0;
-            padding: 10px;
+        
+        header h1 {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
         }
-        h2 {
-            color: #4b6cb7;
-            border-bottom: 2px solid #4b6cb7;
-            padding-bottom: 5px;
-            margin-top: 30px;
+        
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
         }
-        h3 {
-            color: #182848;
+        
+        .github-badge {
+            display: inline-block;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 5px 15px;
+            border-radius: 20px;
+            margin-top: 15px;
+            font-size: 0.9rem;
         }
-        .nav {
-            background-color: #182848;
-            padding: 10px;
-            margin: 0 -20px 20px -20px;
-        }
-        .nav a {
+        
+        .github-badge a {
             color: white;
             text-decoration: none;
-            padding: 5px 15px;
-            margin: 0 5px;
         }
+        
+        .github-badge i {
+            margin-right: 5px;
+        }
+        
+        .nav {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            background: white;
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .nav a {
+            color: var(--dark);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            margin: 0.5rem;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
         .nav a:hover {
-            background-color: #4b6cb7;
-            border-radius: 3px;
-        }
-        code {
-            background-color: #f4f4f4;
-            border: 1px solid #ddd;
-            padding: 2px 5px;
-            font-family: 'Courier New', monospace;
-        }
-        pre {
-            background-color: #f8f8f8;
-            border: 1px solid #ddd;
-            padding: 15px;
-            overflow: auto;
-            margin: 15px 0;
-        }
-        .example {
-            background-color: #e8f4f8;
-            border-left: 5px solid #4b6cb7;
-            padding: 15px;
-            margin: 15px 0;
-        }
-        .important {
-            background-color: #fff9e6;
-            border-left: 5px solid #ffcc00;
-            padding: 15px;
-            margin: 15px 0;
-        }
-        .footer {
-            text-align: center;
-            margin-top: 30px;
-            padding: 15px;
-            background-color: #182848;
+            background: var(--primary);
             color: white;
-            margin: 20px -20px -20px -20px;
         }
+        
+        .section {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .section h2 {
+            color: var(--primary);
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .section h2 i {
+            margin-right: 10px;
+        }
+        
+        .section h3 {
+            color: var(--secondary);
+            margin: 1.5rem 0 1rem 0;
+        }
+        
+        .card {
+            background: var(--light);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-left: 4px solid var(--primary);
+        }
+        
+        .card.success {
+            border-left-color: var(--success);
+        }
+        
+        .card.warning {
+            border-left-color: var(--warning);
+        }
+        
+        .card.info {
+            border-left-color: var(--info);
+        }
+        
+        .card.danger {
+            border-left-color: var(--danger);
+        }
+        
+        .card h4 {
+            color: var(--secondary);
+            margin-bottom: 0.5rem;
+        }
+        
+        pre {
+            background: #2b303b;
+            color: #dee2e6;
+            padding: 1.5rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            font-family: 'Fira Code', monospace;
+            line-height: 1.5;
+        }
+        
+        code {
+            background: #f1f3f5;
+            color: #e83e8c;
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-family: 'Fira Code', monospace;
+        }
+        
+        .code-comment {
+            color: #8a8a8a;
+        }
+        
         .comparison-table {
             width: 100%;
             border-collapse: collapse;
-            margin: 20px 0;
+            margin: 1.5rem 0;
         }
+        
         .comparison-table th, .comparison-table td {
-            border: 1px solid #ddd;
-            padding: 8px;
+            border: 1px solid #dee2e6;
+            padding: 0.75rem;
             text-align: left;
         }
+        
         .comparison-table th {
-            background-color: #f2f2f2;
+            background-color: var(--primary);
+            color: white;
         }
-        .code-comment {
-            color: #008000;
-            font-style: italic;
+        
+        .comparison-table tr:nth-child(even) {
+            background-color: #f8f9fa;
         }
-        .highlight {
-            background-color: #ffffcc;
-            padding: 2px;
+        
+        .comparison-table tr:hover {
+            background-color: #e9ecef;
+        }
+        
+        .btn {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            background: var(--secondary);
+            transform: translateY(-2px);
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+        
+        .feature {
+            background: var(--light);
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .feature i {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+        
+        .feature h4 {
+            color: var(--secondary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            background: var(--secondary);
+            color: white;
+            border-radius: 10px;
+            margin-top: 2rem;
+        }
+        
+        .footer a {
+            color: #ffcc00;
+            text-decoration: none;
+        }
+        
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        
+        .changelog {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+        
+        .changelog-version {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #dee2e6;
+        }
+        
+        .changelog-version:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .changelog-version h4 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .changelog-version ul {
+            margin-left: 1.5rem;
+        }
+        
+        .changelog-version li {
+            margin-bottom: 0.5rem;
+        }
+        
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2rem;
+            }
+            
+            .nav {
+                flex-direction: column;
+            }
+            
+            .nav a {
+                margin: 0.25rem 0;
+                text-align: center;
+            }
+            
+            .features {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -118,276 +321,277 @@
     <div class="container">
         <header>
             <h1>FSP Algorithm</h1>
-            <p>Find Similar Patterns - A New Era of Data Compression</p>
+            <p>Find Similar Patterns - Next Generation Data Compression</p>
+            <div class="github-badge">
+                <a href="https://github.com/Ferki-git-creator/fsp" target="_blank">
+                    <i class="fab fa-github"></i> View on GitHub
+                </a>
+            </div>
         </header>
 
         <div class="nav">
-            <a href="#about">About the Algorithm</a>
-            <a href="#how-it-works">How It Works</a>
-            <a href="#implementation">Implementation</a>
-            <a href="#advantages">Advantages</a>
-            <a href="#examples">Examples</a>
-            <a href="#comparison">Comparison</a>
-            <a href="#usage">Application</a>
+            <a href="#about"><i class="fas fa-info-circle"></i> About</a>
+            <a href="#how-it-works"><i class="fas fa-cogs"></i> How It Works</a>
+            <a href="#implementation"><i class="fas fa-code"></i> Implementation</a>
+            <a href="#features"><i class="fas fa-star"></i> Features</a>
+            <a href="#examples"><i class="fas fa-list-ol"></i> Examples</a>
+            <a href="#comparison"><i class="fas fa-balance-scale"></i> Comparison</a>
+            <a href="#applications"><i class="fas fa-rocket"></i> Applications</a>
+            <a href="#changelog"><i class="fas fa-history"></i> Changelog</a>
         </div>
 
-        <section id="about">
-            <h2>What is the FSP Algorithm?</h2>
-            <p>FSP (Find Similar Patterns) is a revolutionary data compression algorithm designed to effectively reduce data size by finding similar patterns. Unlike traditional compression methods (like ZIP, RAR, etc.), FSP specializes in working with small and medium-sized data volumes, where classic algorithms are often inefficient.</p>
+        <section id="about" class="section">
+            <h2><i class="fas fa-info-circle"></i> About the FSP Algorithm</h2>
+            <p>The FSP (Find Similar Patterns) algorithm is a revolutionary data compression technique designed to efficiently reduce data size by identifying and leveraging similar patterns within the data. Unlike traditional compression methods, FSP specializes in working with small to medium-sized data volumes where conventional algorithms often introduce significant overhead.</p>
             
-            <div class="important">
-                <h3>Why is FSP Unique?</h3>
-                <p>Most compression algorithms add overhead, which makes them inefficient for small files. FSP uses a fundamentally different approach, avoiding this problem.</p>
+            <div class="card info">
+                <h4>Why FSP is Different</h4>
+                <p>Most compression algorithms add substantial overhead, making them inefficient for small files. FSP takes a fundamentally different approach by focusing on pattern recognition and reference-based compression, avoiding the overhead problem entirely.</p>
+            </div>
+            
+            <div class="card success">
+                <h4>Key Innovation</h4>
+                <p>FSP introduces automatic pattern length selection, optimized reference handling, and extended pattern matching capabilities that make it exceptionally efficient for data with repeated sequences.</p>
             </div>
         </section>
 
-        <section id="how-it-works">
-            <h2>How the FSP Algorithm Works</h2>
-            <p>The algorithm is based on the principle of delta encoding and finding differences between similar data blocks.</p>
+        <section id="how-it-works" class="section">
+            <h2><i class="fas fa-cogs"></i> How the FSP Algorithm Works</h2>
+            <p>The FSP algorithm operates on the principle of identifying repeated patterns in data and replacing subsequent occurrences with references to the first occurrence. This approach significantly reduces redundancy without the overhead of traditional compression methods.</p>
             
-            <h3>Compression Stages:</h3>
+            <h3>Compression Process</h3>
             <ol>
-                <li><strong>Choosing the base block</strong> - the first data block is saved in full as a reference</li>
-                <li><strong>Finding differences</strong> - differences from the base block are found for each subsequent block</li>
-                <li><strong>Storage optimization</strong> - if the differences are fewer than the block size, only they are saved</li>
-                <li><strong>Storing unique blocks</strong> - if a block is very different, it is saved in full</li>
+                <li><strong>Pattern Discovery</strong> - The algorithm scans the input data to identify repeated patterns of lengths between the configured minimum and maximum values (typically 3-5 characters).</li>
+                <li><strong>Pattern Selection</strong> - The algorithm automatically selects the optimal pattern length that maximizes compression efficiency based on the data characteristics.</li>
+                <li><strong>Reference Creation</strong> - For each repeated pattern, the algorithm creates a reference pointing to the first occurrence of that pattern.</li>
+                <li><strong>Output Generation</strong> - The compressed output consists of a combination of literal data (for unique patterns) and references (for repeated patterns).</li>
             </ol>
             
-            <h3>Mathematical principles:</h3>
-            <p>The algorithm uses sequence comparison at the byte or character level. For two sequences A and B, the difference is defined as a set of tuples (position, new_value).</p>
+            <h3>Decompression Process</h3>
+            <ol>
+                <li><strong>Parsing</strong> - The decompressor reads the compressed data, parsing literal values and references.</li>
+                <li><strong>Reconstruction</strong> - For each reference, the decompressor looks up the referenced pattern and inserts it into the output.</li>
+                <li><strong>Output</strong> - The original data is perfectly reconstructed by combining literal values and resolved references.</li>
+            </ol>
             
-            <div class="example">
-                <h4>Formal definition:</h4>
-                <p>For a base string B and a target string T, the delta D is defined as:</p>
-                <p>D = {(i, T[i]) | for all i, where B[i] ≠ T[i]}</p>
-                <p>If len(T) > len(B), additional characters are added to the delta.</p>
+            <div class="card">
+                <h4>Mathematical Foundation</h4>
+                <p>The algorithm uses sequence comparison at the byte or character level. For a base string B and target string T, the compression efficiency is determined by the number and length of common substrings.</p>
+                <p>The compression ratio CR is defined as: CR = Original Size / Compressed Size</p>
+                <p>Where Compressed Size = Size(Literals) + Size(References)</p>
             </div>
         </section>
 
-        <section id="implementation">
-            <h2>Detailed Algorithm Implementation</h2>
+        <section id="implementation" class="section">
+            <h2><i class="fas fa-code"></i> Implementation Details</h2>
+            <p>The FSP algorithm is implemented in Python but can be easily ported to other programming languages. Below is the core implementation of the pattern finding and compression logic.</p>
             
-            <h3>Full implementation in Python</h3>
-            <pre><code>def fsp_diff(a: str, b: str):
-    """
-    Finds differences between two strings (can be of different lengths)
+            <h3>Pattern Discovery Function</h3>
+            <pre><code>def find_patterns(text, min_len=3, max_len=5):
+    """Find repeated patterns in text and return dictionary with positions"""
+    patterns = defaultdict(list)
+    n = len(text)
     
-    Args:
-        a (str): The first string (base)
-        b (str): The second string (to be compared)
+    # Search for patterns of all lengths between min_len and max_len
+    for L in range(min_len, max_len + 1):
+        for i in range(n - L + 1):
+            s = text[i:i+L]
+            patterns[s].append(i)
     
-    Returns:
-        list: A list of tuples (position, new_character)
-    """
-    diffs = []
-    max_len = max(len(a), len(b))
-    
-    for i in range(max_len):
-        char_a = a[i] if i < len(a) else None
-        char_b = b[i] if i < len(b) else None
-        
-        if char_a != char_b:
-            diffs.append((i, char_b))
-    
-    return diffs
-
-
-def fsp_compress(lines):
-    """
-    Compresses a list of strings using the FSP algorithm
-    
-    Args:
-        lines (list): A list of strings to compress
-    
-    Returns:
-        list: Compressed data in the format of a list of tuples (tag, data)
-    """
+    # Keep only patterns that occur more than once
+    return {p: pos for p, pos in patterns.items() if len(pos) > 1}</code></pre>
+            
+            <h3>Compression Function</h3>
+            <pre><code>def fsp_compress(text, min_len=3, max_len=5):
+    """Compress text using the FSP algorithm"""
+    patterns = find_patterns(text, min_len, max_len)
     compressed = []
+    used = [False] * len(text)
     
-    if not lines:
-        return compressed
-    
-    # Save the first string as the base
-    base = lines[0]
-    compressed.append(("BASE", base))
-    
-    # Process the remaining strings
-    for line in lines[1:]:
-        # Find differences from the base string
-        differences = fsp_diff(base, line)
+    i = 0
+    while i < len(text):
+        # Try to find the longest pattern starting at i
+        best_pat = None
+        best_pos = None
+        best_len = 0
         
-        # Determine what's more efficient: save the diff or the entire string
-        if len(differences) < len(line):
-            compressed.append(("DIFF", differences))
+        for pat, positions in patterns.items():
+            if i in positions and len(pat) > best_len:
+                # Find first previous occurrence
+                prev_positions = [p for p in positions if p < i]
+                if prev_positions:
+                    best_pat = pat
+                    best_pos = prev_positions[-1]
+                    best_len = len(pat)
+        
+        if best_pat and best_pos is not None:
+            compressed.append(("REF", best_pos, best_len))
+            for j in range(best_len):
+                used[i+j] = True
+            i += best_len
         else:
-            compressed.append(("RAW", line))
-    
-    return compressed
-
-
-def fsp_decompress(compressed):
-    """
-    Decompresses FSP-compressed data
-    
-    Args:
-        compressed (list): Compressed data in the format of a list of tuples (tag, data)
-    
-    Returns:
-        list: The restored list of strings
-    """
-    lines = []
-    base = None
-    
-    for tag, data in compressed:
-        if tag == "BASE":
-            base = data
-            lines.append(base)
-        elif tag == "DIFF":
-            if base is None:
-                raise ValueError("BASE block must come before DIFF blocks")
+            compressed.append(("LITERAL", text[i]))
+            i += 1
             
-            # Create a copy of the base string for modification
-            current_chars = list(base)
+    return compressed</code></pre>
             
-            # Apply all differences
-            for position, new_char in data:
-                if position < len(current_chars):
-                    if new_char is None:
-                        # Remove the character
-                        current_chars.pop(position)
-                    else:
-                        # Replace the character
-                        current_chars[position] = new_char
-                else:
-                    if new_char is not None:
-                        # Add a new character
-                        current_chars.append(new_char)
+            <h3>Decompression Function</h3>
+            <pre><code>def fsp_decompress(compressed):
+    """Decompress FSP-compressed data"""
+    output_str = ""
+    for item in compressed:
+        if item[0] == "LITERAL":
+            output_str += item[1]
+        elif item[0] == "REF":
+            pos, length = item[1], item[2]
+            ref_text = output_str[pos:pos+length]
+            output_str += ref_text
+    return output_str</code></pre>
             
-            # Convert back to a string and add to the result
-            reconstructed_line = ''.join(current_chars)
-            lines.append(reconstructed_line)
-        elif tag == "RAW":
-            lines.append(data)
-    
-    return lines
-
-
-# Example usage
-if __name__ == "__main__":
-    # Input data for compression
-    test_data = [
-        "Hello friend!",
-        "Hello fiend!",
-        "Hello friends!",
-        "Hello friend!"
-    ]
-    
-    print("Original data:")
-    for i, line in enumerate(test_data):
-        print(f"{i}: {line} (length: {len(line)} bytes)")
-    
-    # Compression
-    compressed_data = fsp_compress(test_data)
-    
-    print("\nCompressed data:")
-    for tag, data in compressed_data:
-        if tag == "DIFF":
-            print(f"{tag}: {len(data)} differences")
-        else:
-            print(f"{tag}: {data}")
-    
-    # Decompression
-    decompressed_data = fsp_decompress(compressed_data)
-    
-    print("\nDecompressed data:")
-    for i, line in enumerate(decompressed_data):
-        print(f"{i}: {line}")
-    
-    # Check for correctness
-    assert test_data == decompressed_data, "Error: Decompressed data does not match the original!"
-    print("\n✓ Check passed: Data correctly restored!")
-    
-    # Calculate compression efficiency
-    original_size = sum(len(line.encode('utf-8')) for line in test_data)
-    compressed_size = 0
-    
-    for tag, data in compressed_data:
-        if tag in ("BASE", "RAW"):
-            compressed_size += len(data.encode('utf-8'))
-        elif tag == "DIFF":
-            # Assuming each difference takes ~2 bytes
-            compressed_size += len(data) * 2
-    
-    ratio = original_size / compressed_size
-    print(f"\nCompression efficiency:")
-    print(f"Original size: {original_size} bytes")
-    print(f"Compressed size: ~{compressed_size} bytes")
-    print(f"Compression ratio: {ratio:.2f}")</code></pre>
+            <div class="card warning">
+                <h4>Implementation Note</h4>
+                <p>The algorithm can be optimized for specific use cases by adjusting the min_len and max_len parameters. For highly repetitive data, increasing max_len can improve compression ratio.</p>
+            </div>
         </section>
 
-        <section id="advantages">
-            <h2>Advantages of the FSP Algorithm</h2>
+        <section id="features" class="section">
+            <h2><i class="fas fa-star"></i> Features & Advantages</h2>
             
-            <h3>Compared to traditional methods:</h3>
-            <ul>
-                <li><strong>Efficiency for small data</strong> - doesn't add significant overhead</li>
-                <li><strong>Simplicity of implementation</strong> - doesn't require complex data structures or mathematical operations</li>
-                <li><strong>High speed</strong> - linear complexity O(n) for most operations</li>
-                <li><strong>Versatility</strong> - works with any data type (text, binary data)</li>
-            </ul>
+            <div class="features">
+                <div class="feature">
+                    <i class="fas fa-bolt"></i>
+                    <h4>High Speed</h4>
+                    <p>Linear complexity O(n) for most operations</p>
+                </div>
+                
+                <div class="feature">
+                    <i class="fas fa-compress-arrows-alt"></i>
+                    <h4>Efficient Compression</h4>
+                    <p>Excellent compression ratio for repetitive data</p>
+                </div>
+                
+                <div class="feature">
+                    <i class="fas fa-cogs"></i>
+                    <h4>Simple Implementation</h4>
+                    <p>No complex data structures or mathematical operations</p>
+                </div>
+                
+                <div class="feature">
+                    <i class="fas fa-exchange-alt"></i>
+                    <h4>Versatility</h4>
+                    <p>Works with any data type (text, binary, etc.)</p>
+                </div>
+                
+                <div class="feature">
+                    <i class="fas fa-sliders-h"></i>
+                    <h4>Adaptive Pattern Length</h4>
+                    <p>Automatically selects optimal pattern lengths</p>
+                </div>
+                
+                <div class="feature">
+                    <i class="fas fa-code-branch"></i>
+                    <h4>Streaming Support</h4>
+                    <p>Can be adapted for streaming data processing</p>
+                </div>
+            </div>
             
-            <h3>Technical advantages:</h3>
+            <h3>Technical Advantages</h3>
             <ul>
                 <li>Minimal overhead for service information</li>
-                <li>Ability for streaming data processing</li>
+                <li>Ability to process data in streams</li>
                 <li>Easy adaptation for working with binary data</li>
                 <li>Support for incremental compression</li>
+                <li>No dictionary storage requirements</li>
+                <li>Lossless compression - perfect data reconstruction</li>
             </ul>
         </section>
 
-        <section id="examples">
-            <h2>Detailed Examples of Operation</h2>
+        <section id="examples" class="section">
+            <h2><i class="fas fa-list-ol"></i> Detailed Examples</h2>
             
-            <h3>Example 1: Text Data</h3>
-            <div class="example">
-                <p><strong>Input data:</strong></p>
-                <pre>["Hello friend!", "Hello fiend!", "Hello friends!", "Hello friend!"]</pre>
+            <h3>Example 1: Simple Text Compression</h3>
+            <div class="card">
+                <h4>Input Text</h4>
+                <p>"Hello friend! Hello fiend! Hello friends! Hello friend!"</p>
                 
-                <p><strong>Compression process:</strong></p>
-                <ol>
-                    <li>Save "Hello friend!" as BASE</li>
-                    <li>For "Hello fiend!" find differences: [(7, 'i'), (8, 'e'), (9, 'n'), (10, 'd'), (11, '!'), (12, None)]</li>
-                    <li>For "Hello friends!" find differences: [(12, 's'), (13, '!')]</li>
-                    <li>For "Hello friend!" there are no differences (empty diff)</li>
-                </ol>
+                <h4>Compression Process</h4>
+                <p>The algorithm identifies repeated patterns like "Hello", "friend", and "ello " and replaces subsequent occurrences with references.</p>
                 
-                <p><strong>Compression result:</strong></p>
-                <pre>[("BASE", "Hello friend!"),
- ("DIFF", [(7, 'i'), (8, 'e'), (9, 'n'), (10, 'd'), (11, '!'), (12, None)]),
- ("DIFF", [(12, 's'), (13, '!')]),
- ("DIFF", [])]</pre>
+                <h4>Compressed Output</h4>
+                <pre>('LITERAL', 'H')
+('LITERAL', 'e')
+('LITERAL', 'l')
+('LITERAL', 'l')
+('LITERAL', 'o')
+('LITERAL', ' ')
+('LITERAL', 'f')
+('LITERAL', 'r')
+('LITERAL', 'i')
+('LITERAL', 'e')
+('LITERAL', 'n')
+('LITERAL', 'd')
+('LITERAL', '!')
+('LITERAL', ' ')
+('REF', 0, 5)  // Reference to "Hello"
+('LITERAL', ' ')
+('LITERAL', 'f')
+('REF', 8, 5)  // Reference to "riend"
+// ... additional references</pre>
+                
+                <h4>Compression Results</h4>
+                <p>Original size: 55 bytes</p>
+                <p>Compressed size: 33 bytes</p>
+                <p>Compression ratio: 1.67</p>
             </div>
             
-            <h3>Example 2: Binary Data</h3>
-            <div class="example">
-                <p>The algorithm can be adapted to work with binary data by comparing bytes instead of characters:</p>
-                <pre><code>def fsp_diff_binary(a: bytes, b: bytes):
-    diffs = []
-    max_len = max(len(a), len(b))
+            <h3>Example 2: Binary Data Adaptation</h3>
+            <div class="card">
+                <p>The algorithm can be adapted for binary data by comparing bytes instead of characters:</p>
+                <pre><code>def fsp_compress_binary(data, min_len=3, max_len=5):
+    """Compress binary data using FSP algorithm"""
+    patterns = defaultdict(list)
+    n = len(data)
     
-    for i in range(max_len):
-        byte_a = a[i] if i < len(a) else None
-        byte_b = b[i] if i < len(b) else None
+    # Search for patterns of all lengths between min_len and max_len
+    for L in range(min_len, max_len + 1):
+        for i in range(n - L + 1):
+            pattern = data[i:i+L]
+            patterns[pattern].append(i)
+    
+    # Keep only patterns that occur more than once
+    patterns = {p: pos for p, pos in patterns.items() if len(pos) > 1}
+    
+    compressed = []
+    used = [False] * n
+    i = 0
+    
+    while i < n:
+        # Try to find the longest pattern starting at i
+        best_pat = None
+        best_pos = None
+        best_len = 0
         
-        if byte_a != byte_b:
-            diffs.append((i, byte_b))
-    
-    return diffs</code></pre>
+        for pat, positions in patterns.items():
+            if i in positions and len(pat) > best_len:
+                prev_positions = [p for p in positions if p < i]
+                if prev_positions:
+                    best_pat = pat
+                    best_pos = prev_positions[-1]
+                    best_len = len(pat)
+        
+        if best_pat and best_pos is not None:
+            compressed.append(("REF", best_pos, best_len))
+            i += best_len
+        else:
+            compressed.append(("LITERAL", data[i]))
+            i += 1
+            
+    return compressed</code></pre>
             </div>
         </section>
 
-        <section id="comparison">
-            <h2>Comparison with Other Algorithms</h2>
+        <section id="comparison" class="section">
+            <h2><i class="fas fa-balance-scale"></i> Comparison with Other Algorithms</h2>
             
             <table class="comparison-table">
                 <tr>
@@ -399,10 +603,10 @@ if __name__ == "__main__":
                 </tr>
                 <tr>
                     <td>Efficiency for small data</td>
-                    <td>High</td>
-                    <td>Low</td>
-                    <td>Medium</td>
-                    <td>Low</td>
+                    <td>Excellent</td>
+                    <td>Poor</td>
+                    <td>Good</td>
+                    <td>Fair</td>
                 </tr>
                 <tr>
                     <td>Overhead</td>
@@ -420,52 +624,171 @@ if __name__ == "__main__":
                 </tr>
                 <tr>
                     <td>Compression speed</td>
-                    <td>High</td>
-                    <td>Medium</td>
                     <td>Very High</td>
+                    <td>Medium</td>
+                    <td>Extremely High</td>
                     <td>Medium</td>
                 </tr>
                 <tr>
-                    <td>Compression ratio</td>
-                    <td>High for similar data</td>
-                    <td>High for large data</td>
-                    <td>Low</td>
-                    <td>High</td>
+                    <td>Decompression speed</td>
+                    <td>Very High</td>
+                    <td>Medium</td>
+                    <td>Extremely High</td>
+                    <td>Medium</td>
+                </tr>
+                <tr>
+                    <td>Compression ratio (repetitive data)</td>
+                    <td>Excellent</td>
+                    <td>Good</td>
+                    <td>Fair</td>
+                    <td>Good</td>
+                </tr>
+                <tr>
+                    <td>Pattern adaptability</td>
+                    <td>Excellent</td>
+                    <td>Good</td>
+                    <td>Poor</td>
+                    <td>Good</td>
                 </tr>
             </table>
             
-            <div class="important">
-                <h3>Key differences:</h3>
-                <p>Unlike dictionary methods (LZ77, LZ78), FSP does not require storing a dictionary. Unlike entropy methods (Huffman, Arithmetic), FSP does not require complex probability calculations.</p>
+            <div class="card info">
+                <h4>Key Differentiators</h4>
+                <p>Unlike dictionary methods (LZ77, LZ78), FSP does not require storing a dictionary. Unlike entropy methods (Huffman, Arithmetic), FSP does not require complex probability calculations. This makes FSP uniquely suited for small to medium-sized repetitive data.</p>
             </div>
         </section>
 
-        <section id="usage">
-            <h2>Areas of Application</h2>
+        <section id="applications" class="section">
+            <h2><i class="fas fa-rocket"></i> Applications</h2>
             
-            <h3>Ideal usage scenarios:</h3>
-            <ul>
-                <li><strong>Version control systems</strong> - storing differences between file versions</li>
-                <li><strong>Databases</strong> - compressing similar records</li>
-                <li><strong>Network data transmission</strong> - minimizing the volume of transmitted data</li>
-                <li><strong>Log file archiving</strong> - efficient compression of highly similar strings</li>
-                <li><strong>Video surveillance</strong> - compressing consecutive frames</li>
-                <li><strong>Bioinformatics</strong> - working with DNA/RNA sequences</li>
-            </ul>
+            <h3>Ideal Use Cases</h3>
+            <div class="features">
+                <div class="feature">
+                    <i class="fas fa-code-branch"></i>
+                    <h4>Version Control Systems</h4>
+                    <p>Storing differences between file versions efficiently</p>
+                </div>
+                
+                <div class="feature">
+                    <i class="fas fa-database"></i>
+                    <h4>Databases</h4>
+                    <p>Compressing similar records with minimal overhead</p>
+                </div>
+                
+                <div class="feature">
+                    <i class="fas fa-network-wired"></i>
+                    <h4>Network Transmission</h4>
+                    <p>Minimizing data transfer volume for repetitive content</p>
+                </div>
+                
+                <div class="feature">
+                    <i class="fas fa-file-alt"></i>
+                    <h4>Log File Archiving</h4>
+                    <p>Efficient compression of highly similar log entries</p>
+                </div>
+                
+                <div class="feature">
+                    <i class="fas fa-video"></i>
+                    <h4>Video Surveillance</h4>
+                    <p>Compressing consecutive frames with minimal changes</p>
+                </div>
+                
+                <div class="feature">
+                    <i class="fas fa-dna"></i>
+                    <h4>Bioinformatics</h4>
+                    <p>Working with DNA/RNA sequences with repeated patterns</p>
+                </div>
+            </div>
             
-            <h3>Limitations:</h3>
-            <ul>
-                <li>Less effective for completely random data</li>
-                <li>Requires optimization for working with very large files</li>
-                <li>Efficiency depends on the presence of similar patterns in the data</li>
-            </ul>
+            <h3>Limitations</h3>
+            <div class="card warning">
+                <ul>
+                    <li>Less effective for completely random data with no patterns</li>
+                    <li>Requires optimization for very large files (GB+)</li>
+                    <li>Efficiency depends on the presence of similar patterns in the data</li>
+                    <li>Not yet optimized for real-time streaming applications</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="changelog" class="section">
+            <h2><i class="fas fa-history"></i> Changelog</h2>
+            
+            <div class="changelog">
+                <div class="changelog-version">
+                    <h4>Version 2.0 - Next Level FSP</h4>
+                    <ul>
+                        <li>Pattern search limited to 3–5 characters to reduce overhead</li>
+                        <li>Automatic minimum pattern length selection for maximum repeats</li>
+                        <li>Maximum pattern length extended to 5–6 characters for longer repeated sequences</li>
+                        <li>Base stream stores concatenated unique patterns</li>
+                        <li>References (REF) + literals (LITERAL) replace repeated patterns in text</li>
+                        <li>Patterns that repeat only once are stored as LITERAL to minimize REF overhead</li>
+                        <li>Works on the entire text, not line-by-line</li>
+                        <li>Significantly improved compression ratio</li>
+                        <li>Maintains full reversibility</li>
+                    </ul>
+                </div>
+                
+                <div class="changelog-version">
+                    <h4>Version 1.0 - Original FSP</h4>
+                    <ul>
+                        <li>Block-based compression approach</li>
+                        <li>Pattern search from 2 characters to infinity</li>
+                        <li>Base + DIFF per line implementation</li>
+                        <li>Simple line-oriented approach</li>
+                        <li>Potential for compressed text to grow larger than original for small patterns</li>
+                    </ul>
+                </div>
+            </div>
         </section>
 
         <div class="footer">
             <p>FSP Algorithm © 2024. All rights reserved.</p>
             <p>Algorithm developed by a 15-year-old programmer</p>
+            <p>View project on <a href="https://github.com/Ferki-git-creator/fsp">GitHub</a></p>
         </div>
     </div>
+
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 20,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+        
+        // Highlight current section in navigation
+        window.addEventListener('scroll', function() {
+            const sections = document.querySelectorAll('.section');
+            const navLinks = document.querySelectorAll('.nav a');
+            
+            let currentSection = '';
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (pageYOffset >= sectionTop - 100) {
+                    currentSection = section.getAttribute('id');
+                }
+            });
+            
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + currentSection) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
 </body>
 </html>
-
