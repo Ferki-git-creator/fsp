@@ -1,0 +1,34 @@
+Original size: 55 bytes
+Compressed size: 33 bytes
+Compression ratio: 1.67
+Compression time: 0.000103 sec
+Decompression time: 1.1e-05 sec
+
+Compressed representation:
+('LITERAL', 'H')
+('LITERAL', 'e')
+('LITERAL', 'l')
+('LITERAL', 'l')
+('LITERAL', 'o')
+('LITERAL', ' ')
+('LITERAL', 'f')
+('LITERAL', 'r')
+('LITERAL', 'i')
+('LITERAL', 'e')
+('LITERAL', 'n')
+('LITERAL', 'd')
+('LITERAL', '!')
+('LITERAL', ' ')
+('REF', 0, 5)
+('LITERAL', ' ')
+('LITERAL', 'f')
+('REF', 8, 5)
+('REF', 13, 5)
+('REF', 4, 5)
+('REF', 22, 3)
+('LITERAL', 's')
+('REF', 12, 5)
+('REF', 3, 5)
+('REF', 21, 5)
+
+[Program finished]

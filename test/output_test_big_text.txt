@@ -1,0 +1,7 @@
+Original size: 437 bytes
+Compressed size: 403 bytes
+Compression ratio: 1.08
+Compression time: 0.0069 sec
+Decompression time: 0.0003 sec
+
+[Program finished]
