@@ -1,20 +1,32 @@
-FSP — CHANGELOG  
+FSP — CHANGELOG
 
-v1.0 — Original FSP  
-- Block-based compression.  
-- Pattern search from 2 characters to infinity.  
-- Base + DIFF per line.  
-- Compressed text could grow larger than original for small patterns (2 chars).  
-- Simple line-oriented approach.  
+v1.0 — Original FSP
+- Block-based compression.
+- Pattern search from 2 characters to infinity.
+- Base + DIFF per line.
+- Compressed text could grow larger than original for small patterns (2 chars).
+- Simple line-oriented approach.
 
-v2.0 — Updated FSP with optimized pattern search  
-- Pattern search limited to 3–5 characters to reduce overhead.  
-- Automatic minimum pattern length selection (3–5 chars) for maximum repeats.  
-- Maximum pattern length extended to 5–6 chars for longer repeated sequences.  
-- Base stream stores concatenated unique patterns.  
-- References (REF) + literals (LITERAL) replace repeated patterns in text.  
-- Patterns that repeat only once are stored as LITERAL to minimize REF overhead.  
-- Works on the entire text, not line-by-line.  
-- Significantly improved compression ratio; often compresses below original size.  
-- Maintains full reversibility: text can be restored exactly.  
+v2.0 — Updated FSP with optimized pattern search
+- Pattern search limited to 3–5 characters to reduce overhead.
+- Automatic minimum pattern length selection (3–5 chars) for maximum repeats.
+- Maximum pattern length extended to 5–6 chars for longer repeated sequences.
+- Base stream stores concatenated unique patterns.
+- References (REF) + literals (LITERAL) replace repeated patterns in text.
+- Patterns that repeat only once are stored as LITERAL to minimize REF overhead.
+- Works on the entire text, not line-by-line.
+- Significantly improved compression ratio; often compresses below original size.
+- Maintains full reversibility: text can be restored exactly.
 - Ideal for repetitive text, logs, versioned files, or sequences with repeated patterns.
+
+v2.1 — Next Level FSP (byte-accurate)
+- Byte-exact storage: LITERAL and REF stored as raw bytes, no inflation.
+- Automatic pattern length selection refined to 3–5 chars for min and 5–6 for max.
+- REF overhead minimized: single-use patterns stored as LITERAL.
+- Optimized reference handling for faster compression/decompression.
+- Supports long repeated blocks efficiently without increasing complexity.
+- Works on any byte stream or file, not just text.
+- Compressed data saved directly to file with exact reconstruction possible.
+- Speed significantly improved; compression and decompression in milliseconds for small/medium texts.
+- Maintains full reversibility; perfect reconstruction guaranteed.
+- Ideal for logs, backups, versioned files, text, or any data with repeated patterns.

@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<html lang="en"><!DOCTYPE html><!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -345,13 +346,13 @@
             <p>The FSP (Find Similar Patterns) algorithm is a revolutionary data compression technique designed to efficiently reduce data size by identifying and leveraging similar patterns within the data. Unlike traditional compression methods, FSP specializes in working with small to medium-sized data volumes where conventional algorithms often introduce significant overhead.</p>
             
             <div class="card info">
-                <h4>Why FSP is Different</h4>
-                <p>Most compression algorithms add substantial overhead, making them inefficient for small files. FSP takes a fundamentally different approach by focusing on pattern recognition and reference-based compression, avoiding the overhead problem entirely.</p>
+                <h4>Version 2.1 - Next Level FSP</h4>
+                <p>FSP is a universal data compression algorithm for any files or byte streams. Its core idea is to find similar patterns in data and store only the differences or references, avoiding duplication. Version 2.1 adds precise byte-level storage, automatic pattern length selection, optimized reference handling, and extended max pattern lengths for long repeats.</p>
             </div>
             
             <div class="card success">
                 <h4>Key Innovation</h4>
-                <p>FSP introduces automatic pattern length selection, optimized reference handling, and extended pattern matching capabilities that make it exceptionally efficient for data with repeated sequences.</p>
+                <p>FSP introduces automatic pattern length selection, optimized reference handling, and extended pattern matching capabilities that make it exceptionally efficient for data with repeated sequences. The algorithm minimizes overhead by storing patterns that repeat only once as LITERAL instead of REF.</p>
             </div>
         </section>
 
@@ -362,9 +363,10 @@
             <h3>Compression Process</h3>
             <ol>
                 <li><strong>Pattern Discovery</strong> - The algorithm scans the input data to identify repeated patterns of lengths between the configured minimum and maximum values (typically 3-5 characters).</li>
-                <li><strong>Pattern Selection</strong> - The algorithm automatically selects the optimal pattern length that maximizes compression efficiency based on the data characteristics.</li>
-                <li><strong>Reference Creation</strong> - For each repeated pattern, the algorithm creates a reference pointing to the first occurrence of that pattern.</li>
-                <li><strong>Output Generation</strong> - The compressed output consists of a combination of literal data (for unique patterns) and references (for repeated patterns).</li>
+                <li><strong>Automatic Pattern Selection</strong> - The algorithm automatically selects the optimal pattern length (3-5 characters) that maximizes repeated patterns while avoiding overhead from too-short sequences.</li>
+                <li><strong>Reference Creation</strong> - For each repeated pattern, the algorithm creates a reference pointing to the first occurrence of that pattern. Patterns that repeat only once are stored as LITERAL to minimize REF overhead.</li>
+                <li><strong>Byte-Exact Storage</strong> - REF and LITERAL are stored as raw bytes for exact size tracking. LITERAL stores 1 byte per character. REF stores position and length information.</li>
+                <li><strong>Output Generation</strong> - The compressed output consists of a combination of literal data (for unique patterns) and references (for repeated patterns) and can be saved directly to a file.</li>
             </ol>
             
             <h3>Decompression Process</h3>
@@ -373,6 +375,17 @@
                 <li><strong>Reconstruction</strong> - For each reference, the decompressor looks up the referenced pattern and inserts it into the output.</li>
                 <li><strong>Output</strong> - The original data is perfectly reconstructed by combining literal values and resolved references.</li>
             </ol>
+            
+            <div class="card">
+                <h4>LEGO Box Analogy</h4>
+                <p>Think of FSP as a LEGO box organization system:</p>
+                <ol>
+                    <li>Pick one construction as the base.</li>
+                    <li>Store similar constructions as base + differences only.</li>
+                    <li>Unique constructions remain unchanged.</li>
+                    <li>You save space by storing only new details instead of the entire construction.</li>
+                </ol>
+            </div>
             
             <div class="card">
                 <h4>Mathematical Foundation</h4>
@@ -401,16 +414,14 @@
     # Keep only patterns that occur more than once
     return {p: pos for p, pos in patterns.items() if len(pos) > 1}</code></pre>
             
-            <h3>Compression Function</h3>
+            <h3>Compression Function (Byte-Level)</h3>
             <pre><code>def fsp_compress(text, min_len=3, max_len=5):
-    """Compress text using the FSP algorithm"""
+    """Compress text using the FSP algorithm with byte-level storage"""
     patterns = find_patterns(text, min_len, max_len)
-    compressed = []
-    used = [False] * len(text)
-    
+    compressed = bytearray()
     i = 0
+    
     while i < len(text):
-        # Try to find the longest pattern starting at i
         best_pat = None
         best_pos = None
         best_len = 0
@@ -425,32 +436,48 @@
                     best_len = len(pat)
         
         if best_pat and best_pos is not None:
-            compressed.append(("REF", best_pos, best_len))
-            for j in range(best_len):
-                used[i+j] = True
+            # REF: 2 bytes pos + 1 byte len
+            compressed += struct.pack(">HB", best_pos, best_len)
             i += best_len
         else:
-            compressed.append(("LITERAL", text[i]))
+            # LITERAL: 1 byte
+            compressed.append(ord(text[i]))
             i += 1
             
     return compressed</code></pre>
             
-            <h3>Decompression Function</h3>
+            <h3>Decompression Function (Byte-Level)</h3>
             <pre><code>def fsp_decompress(compressed):
-    """Decompress FSP-compressed data"""
-    output_str = ""
-    for item in compressed:
-        if item[0] == "LITERAL":
-            output_str += item[1]
-        elif item[0] == "REF":
-            pos, length = item[1], item[2]
-            ref_text = output_str[pos:pos+length]
-            output_str += ref_text
-    return output_str</code></pre>
+    """Decompress FSP-compressed data with byte-level storage"""
+    output = []
+    i = 0
+    
+    while i < len(compressed):
+        # Check if next 3 bytes could be a REF
+        if i + 3 <= len(compressed):
+            pos, length = struct.unpack(">HB", compressed[i:i+3])
+            # Valid REF: pos < len(output)
+            if pos < len(output):
+                output.extend(output[pos:pos+length])
+                i += 3
+                continue
+        # Otherwise, literal
+        output.append(compressed[i])
+        i += 1
+        
+    return bytes(output).decode("ascii")</code></pre>
+            
+            <h3>Pattern Length Guidelines</h3>
+            <ul>
+                <li><strong>Automatic min_len</strong> = 3–5 characters</li>
+                <li><strong>Max pattern length</strong> = 5–6 characters for longer repeats</li>
+                <li><strong>Short repetitive text</strong> → min_len=3, max_len=5</li>
+                <li><strong>Longer logs/technical text</strong> → min_len=4, max_len=6</li>
+            </ul>
             
             <div class="card warning">
                 <h4>Implementation Note</h4>
-                <p>The algorithm can be optimized for specific use cases by adjusting the min_len and max_len parameters. For highly repetitive data, increasing max_len can improve compression ratio.</p>
+                <p>The algorithm can be optimized for specific use cases by adjusting the min_len and max_len parameters. For highly repetitive data, increasing max_len can improve compression ratio. For binary data, the algorithm compares bytes instead of characters.</p>
             </div>
         </section>
 
@@ -493,6 +520,18 @@
                     <h4>Streaming Support</h4>
                     <p>Can be adapted for streaming data processing</p>
                 </div>
+                
+                <div class="feature">
+                    <i class="fas fa-ruler"></i>
+                    <h4>Byte-Exact Storage</h4>
+                    <p>REF and LITERAL stored as raw bytes for exact size tracking</p>
+                </div>
+                
+                <div class="feature">
+                    <i class="fas fa-file-export"></i>
+                    <h4>Direct File Output</h4>
+                    <p>Compressed data can be saved directly to files</p>
+                </div>
             </div>
             
             <h3>Technical Advantages</h3>
@@ -503,6 +542,8 @@
                 <li>Support for incremental compression</li>
                 <li>No dictionary storage requirements</li>
                 <li>Lossless compression - perfect data reconstruction</li>
+                <li>Cross-language implementable (Python, C, C++, Java, Rust, Go, etc.)</li>
+                <li>Testable with speed measurement for compression and decompression</li>
             </ul>
         </section>
 
@@ -515,7 +556,7 @@
                 <p>"Hello friend! Hello fiend! Hello friends! Hello friend!"</p>
                 
                 <h4>Compression Process</h4>
-                <p>The algorithm identifies repeated patterns like "Hello", "friend", and "ello " and replaces subsequent occurrences with references.</p>
+                <p>The algorithm identifies repeated patterns like "Hello", "friend", and "ello " and replaces subsequent occurrences with references. Patterns that repeat only once are stored as LITERAL to minimize REF overhead.</p>
                 
                 <h4>Compressed Output</h4>
                 <pre>('LITERAL', 'H')
@@ -561,8 +602,7 @@
     # Keep only patterns that occur more than once
     patterns = {p: pos for p, pos in patterns.items() if len(pos) > 1}
     
-    compressed = []
-    used = [False] * n
+    compressed = bytearray()
     i = 0
     
     while i < n:
@@ -580,13 +620,28 @@
                     best_len = len(pat)
         
         if best_pat and best_pos is not None:
-            compressed.append(("REF", best_pos, best_len))
+            # REF: position + length
+            compressed += struct.pack(">HB", best_pos, best_len)
             i += best_len
         else:
-            compressed.append(("LITERAL", data[i]))
+            # LITERAL: 1 byte
+            compressed.append(data[i])
             i += 1
             
     return compressed</code></pre>
+            </div>
+            
+            <h3>Example 3: File Output</h3>
+            <div class="card">
+                <p>Compressed data can be saved directly to files:</p>
+                <pre><code># Save compressed to file
+with open("output.txt", "wb") as f:
+    f.write(compressed)
+
+# Read compressed from file
+with open("output.txt", "rb") as f:
+    compressed_data = f.read()
+    decompressed = fsp_decompress(compressed_data)</code></pre>
             </div>
         </section>
 
@@ -650,11 +705,25 @@
                     <td>Poor</td>
                     <td>Good</td>
                 </tr>
+                <tr>
+                    <td>Byte-exact storage</td>
+                    <td>Yes</td>
+                    <td>No</td>
+                    <td>Yes</td>
+                    <td>No</td>
+                </tr>
+                <tr>
+                    <td>Direct file output</td>
+                    <td>Yes</td>
+                    <td>No</td>
+                    <td>Yes</td>
+                    <td>No</td>
+                </tr>
             </table>
             
             <div class="card info">
                 <h4>Key Differentiators</h4>
-                <p>Unlike dictionary methods (LZ77, LZ78), FSP does not require storing a dictionary. Unlike entropy methods (Huffman, Arithmetic), FSP does not require complex probability calculations. This makes FSP uniquely suited for small to medium-sized repetitive data.</p>
+                <p>Unlike dictionary methods (LZ77, LZ78), FSP does not require storing a dictionary. Unlike entropy methods (Huffman, Arithmetic), FSP does not require complex probability calculations. This makes FSP uniquely suited for small to medium-sized repetitive data. Version 2.1 adds byte-exact storage and direct file output capabilities.</p>
             </div>
         </section>
 
@@ -698,6 +767,18 @@
                     <h4>Bioinformatics</h4>
                     <p>Working with DNA/RNA sequences with repeated patterns</p>
                 </div>
+                
+                <div class="feature">
+                    <i class="fas fa-history"></i>
+                    <h4>Incremental Backups</h4>
+                    <p>Storing only changes between backup versions</p>
+                </div>
+                
+                <div class="feature">
+                    <i class="fas fa-images"></i>
+                    <h4>Image Sets</h4>
+                    <p>Compressing sets of images with minor differences</p>
+                </div>
             </div>
             
             <h3>Limitations</h3>
@@ -715,6 +796,22 @@
             <h2><i class="fas fa-history"></i> Changelog</h2>
             
             <div class="changelog">
+                <div class="changelog-version">
+                    <h4>Version 2.1 - Next Level FSP (Current)</h4>
+                    <ul>
+                        <li><strong>Byte-exact storage</strong> - REF and LITERAL are stored as raw bytes for exact size tracking</li>
+                        <li><strong>Improved pattern selection</strong> - Automatic minimum pattern length selection between 3-5 characters</li>
+                        <li><strong>Minimized REF overhead</strong> - Patterns that repeat only once are stored as LITERAL instead of REF</li>
+                        <li><strong>Extended maximum pattern length</strong> - Support for patterns up to 5-6 characters for longer repeats</li>
+                        <li><strong>Direct file output</strong> - Compressed data can be saved directly to files (e.g., output.txt)</li>
+                        <li><strong>Universal compatibility</strong> - Works for any byte file or stream</li>
+                        <li><strong>Cross-language implementation</strong> - Easily implementable in Python, C, C++, Java, Rust, Go, etc.</li>
+                        <li><strong>Enhanced compression ratio</strong> - Better compression for various data types</li>
+                        <li><strong>LEGO box analogy</strong> - Simple explanation of the algorithm's approach</li>
+                        <li><strong>Testable implementation</strong> - Speed measurement for compression and decompression</li>
+                    </ul>
+                </div>
+                
                 <div class="changelog-version">
                     <h4>Version 2.0 - Next Level FSP</h4>
                     <ul>
@@ -746,6 +843,7 @@
         <div class="footer">
             <p>FSP Algorithm © 2024. All rights reserved.</p>
             <p>Algorithm developed by a 15-year-old programmer</p>
+            <p>Licensed under LGPL 3.0</p>
             <p>View project on <a href="https://github.com/Ferki-git-creator/fsp">GitHub</a></p>
         </div>
     </div>

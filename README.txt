@@ -1,8 +1,8 @@
-FSP — Find Similar Patterns (Next Level Update)    
+FSP — Find Similar Patterns (Next Level Update 2.1)    
 
 ALGORITHM DESCRIPTION    
 
-FSP is a universal data compression algorithm for any files or byte streams. Its core idea is to find similar patterns in data and store only the differences or references, avoiding duplication. This next-level update adds automatic pattern length selection, optimized reference handling, and extended max pattern lengths for long repeats.  
+FSP is a universal data compression algorithm for any files or byte streams. Its core idea is to find similar patterns in data and store only the differences or references, avoiding duplication. Version 2.1 adds precise byte-level storage, automatic pattern length selection, optimized reference handling, and extended max pattern lengths for long repeats.  
 
 AUTOMATIC MINIMUM PATTERN SELECTION    
 
@@ -18,6 +18,13 @@ MAXIMUM PATTERN LENGTH SELECTION
 
 - For longer repeated blocks, the algorithm searches for patterns up to 5–6 characters long.  
 - Longer patterns improve compression for large repeated sequences without increasing complexity.  
+
+BYTE-EXACT STORAGE (NEW IN 2.1)    
+
+- REF and LITERAL are stored as raw bytes for exact size tracking.  
+- LITERAL stores 1 byte per character.  
+- REF stores 1 byte for position + 1 byte for length (on small test data) or more bytes depending on data size.  
+- Compressed data can be saved directly to a file (e.g., output.txt) and decompressed without additional metadata.  
 
 SIMPLE EXPLANATION    
 
@@ -61,14 +68,15 @@ IMPLEMENTATION STEPS
 2. Create a list of base patterns.  
 3. For each new pattern:  
    a. Check for a similar pattern in base patterns.  
-   b. If similar, store as REF (offset + length) or differences.  
+   b. If similar, store as REF (offset + length).  
    c. If unique, store as LITERAL.  
 4. Record results:  
    - Base patterns  
    - References/differences for repeated patterns  
    - Unique LITERAL data  
-5. Decompression:  
-   a. Load base patterns  
+5. Save compressed data to a file (e.g., output.txt) as raw bytes.  
+6. Decompression:  
+   a. Read compressed bytes from file  
    b. Apply references/differences to reconstruct repeated patterns  
    c. Add unique LITERAL data unchanged  
 
@@ -85,14 +93,15 @@ FEATURES
 - Automatic pattern length selection for maximum compression  
 - Minimized REF overhead to prevent size inflation  
 - Handles long repeated patterns efficiently  
-- Simple LITERAL + REF format  
+- Simple LITERAL + REF format stored as raw bytes  
 - Works on any type of data stream  
-- No complex data structures needed  
 - Cross-language implementable (Python, C, C++, Java, Rust, Go, etc.)  
+- Compressed data saved byte-for-byte for exact decompression  
+- Testable with speed measurement for compression and decompression  
 
 SUMMARY    
 
-Next-level FSP is simple, universal, and powerful. It automatically adapts pattern lengths, minimizes unnecessary references, and effectively compresses data with repeated sequences. Ideal for text, byte streams, backups, logs, images, or any data with repeated patterns, providing significant file size reduction without data loss.  
+Next-level FSP 2.1 is simple, universal, and powerful. It automatically adapts pattern lengths, minimizes unnecessary references, and effectively compresses data with repeated sequences. Ideal for text, byte streams, backups, logs, images, or any data with repeated patterns, providing significant file size reduction without data loss. Compressed files can be stored and transmitted as raw bytes with exact reconstruction.  
 
 LICENSE    
 
